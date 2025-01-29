@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
-import { loginStudent } from '../../services/api'
+import { useAuth } from '../../context/AuthContext';
 
 
 function LoginPage() {
+    const {login} = useAuth()
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -19,7 +20,7 @@ function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await loginStudent(formData);
+            login(formData);
             navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Errore durante il login');
