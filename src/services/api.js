@@ -5,9 +5,9 @@ const API = axios.create({
 })
 
 export const loginStudent = async (username, password) => {
-    const response = await API.post('/login', {username, password}, {withCredentials: true})
-    return response.data
-}
+    return await API.post('/login', {username, password}, { withCredentials: true });
+};
+
 
 export const logoutStudent = async () => {
     await API.get('/logout', {withCredentials: true})

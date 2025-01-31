@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 const PrivateRoute = ({children}) => {
     const {student, loading} = useAuth()
     if (loading) return <p>Caricamento...</p>
-    return student ? children : <Navigate to="/dashboard" replace/>;
+    return student ? children : <Navigate to="/dashboard"/>;
 }
 
 export default PrivateRoute

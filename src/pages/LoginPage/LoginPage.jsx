@@ -20,7 +20,7 @@ function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            login(formData);
+            await login(formData.username, formData.password);
             navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Errore durante il login');
