@@ -12,11 +12,10 @@ export const AuthProvider = ({children}) => {
         const checkAuth = async () => {
             try {
                 const authenticatedStudent = await getAuthenticatedStudents();
-                if (!authenticatedStudent) {
-                    console.log("Sessione scaduta. Effettua nuovamente il login.");
-                    setStudent(null);
-                } else {
+                if (authenticatedStudent) {
                     setStudent(authenticatedStudent);
+                } else {
+                    setStudent(null);
                 }
             } catch (err) {
                 console.error("Errore durante il controllo dell'autenticazione:", err.response?.data || err.message);
@@ -30,10 +29,8 @@ export const AuthProvider = ({children}) => {
 
     const login = async (username, password) => {
         try {
-            console.log("Dati inviati al server:", { username, password });
             const response = await loginStudent(username, password);
-            setStudent(response.data.student) // Passa i dati correttamente
-            console.log("Login riuscito:", response.data);
+            setStudent(response.data.student) 
         } catch (err) {
             console.error("Errore durante il login:", err.response?.data || err.message);
         }
