@@ -11,26 +11,28 @@ export const AuthProvider = ({children}) => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const authenticatedStudent = await getAuthenticatedStudents();
+                const authenticatedStudent = await getAuthenticatedStudents(); // API `/auth`
                 if (authenticatedStudent) {
-                    setStudent(authenticatedStudent);
+                    setStudent(authenticatedStudent); // Imposta lo studente autenticato
                 } else {
-                    setStudent(null);
+                    console.log("Sessione scaduta. Effettua nuovamente il login.");
+                    setStudent(null); // Reindirizza al login
                 }
             } catch (err) {
                 console.error("Errore durante il controllo dell'autenticazione:", err.response?.data || err.message);
-                setStudent(null); // Logout automatico
+                setStudent(null); // Logout automatico in caso di errore
             } finally {
-                setLoading(false);
+                setLoading(false); // Imposta lo stato di caricamento
             }
-        }
-        checkAuth()
-    }, [])
+        };
+    
+        checkAuth();
+    }, []);
 
     const login = async (username, password) => {
         try {
             const response = await loginStudent(username, password);
-            setStudent(response.data.student) 
+            setStudent(response.data) 
         } catch (err) {
             console.error("Errore durante il login:", err.response?.data || err.message);
         }

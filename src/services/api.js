@@ -16,6 +16,7 @@ export const logoutStudent = async () => {
 export const getAuthenticatedStudents = async () => {
     try {
         const response = await API.get('/auth')
+        console.log(response.data)
         return response.data
     } catch (error) {
         console.error("Errore autenticazione:", error.response?.data || error.message);
