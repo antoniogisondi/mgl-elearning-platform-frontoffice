@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { loginStudent, logoutStudent, getAuthenticatedStudents } from '../services/api'
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext()
 
@@ -11,15 +12,18 @@ export const AuthProvider = ({children}) => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const authenticatedStudent = await getAuthenticatedStudents(); // API `/auth`
-                if (authenticatedStudent) {
-                    setStudent(authenticatedStudent); // Imposta lo studente autenticato
-                } else {
-                    console.log("Sessione scaduta. Effettua nuovamente il login.");
-                    setStudent(null); // Reindirizza al login
+                if (window.location.pathname === '/' || window.location.pathname === '/login') {
+                    return;
                 }
+                const authenticatedStudent = await getAuthenticatedStudents(); // API `/auth`
+                setStudent(authenticatedStudent);
+                console.log(student)
             } catch (err) {
-                console.error("Errore durante il controllo dell'autenticazione:", err.response?.data || err.message);
+                if (err.response?.status === 401) {
+                    console.log("Utente non autenticato, procedi al login");
+                } else {
+                    console.error("Errore durante la verifica:", err);
+                }
                 setStudent(null); // Logout automatico in caso di errore
             } finally {
                 setLoading(false); // Imposta lo stato di caricamento
@@ -44,7 +48,7 @@ export const AuthProvider = ({children}) => {
     }
 
     return (
-        <AuthContext.Provider value={{student, login, logout, loading, isAuthenticated: !!student}}>
+        <AuthContext.Provider value={{student, login, logout, loading}}>
             {children}
         </AuthContext.Provider>
     )

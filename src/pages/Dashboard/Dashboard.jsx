@@ -10,9 +10,11 @@ function Dashboard() {
         await logout()
         navigate('/')
     }
+
+    if (!student) return navigate('/')
     return (
         <div>
-            <h1>Benvenuto nella dashboard</h1>
+            <h1>Benvenuto nella dashboard {student.nome}</h1>
             <button onClick={handleLogout}>Logout</button>
         </div>
     )
