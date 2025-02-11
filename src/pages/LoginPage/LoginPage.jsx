@@ -5,23 +5,14 @@ import { useAuth } from '../../context/AuthContext';
 
 function LoginPage() {
     const {login} = useAuth()
-    const [formData, setFormData] = useState({
-        username: '',
-        password: '',
-    });
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [error, setError] = useState('')
-
-    const navigate = useNavigate();
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await login(formData.username, formData.password);
-            navigate('/dashboard');
+            await login(username, password);
         } catch (err) {
             setError(err.response?.data?.message || 'Errore durante il login');
         }
@@ -31,8 +22,8 @@ function LoginPage() {
             <div className="col-md-6">
                 <h1>Login</h1>
                 <form onSubmit={handleSubmit} className='form-control'>
-                    <input type="text" name="username" placeholder="Username" onChange={handleChange} />
-                    <input type="password" name="password" placeholder="Password" onChange={handleChange} />
+                    <input type="text" value={username} placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+                    <input type="password" value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                     <button type="submit">Accedi</button>
                 </form>
             </div>

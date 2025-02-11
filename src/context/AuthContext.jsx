@@ -11,23 +11,15 @@ export const AuthProvider = ({children}) => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            try {
-                if (window.location.pathname === '/' || window.location.pathname === '/login') {
-                    return;
-                }
-                const authenticatedStudent = await getAuthenticatedStudents(); // API `/auth`
-                setStudent(authenticatedStudent);
-                console.log(student)
-            } catch (err) {
-                if (err.response?.status === 401) {
-                    console.log("Utente non autenticato, procedi al login");
-                } else {
-                    console.error("Errore durante la verifica:", err);
-                }
-                setStudent(null); // Logout automatico in caso di errore
-            } finally {
-                setLoading(false); // Imposta lo stato di caricamento
+            const authenticatedStudent  = await getAuthenticatedStudents()
+            console.log(authenticatedStudent)
+            if (authenticatedStudent) {
+                setStudent(authenticatedStudent)
+            } else {
+                logout()
             }
+
+            setLoading(false)
         };
     
         checkAuth();
@@ -35,21 +27,25 @@ export const AuthProvider = ({children}) => {
 
     const login = async (username, password) => {
         try {
-            const response = await loginStudent(username, password);
-            setStudent(response.data) 
+            const student = await loginStudent(username, password);
+            console.log(student)
+            if (student) {
+                setStudent(student)
+                window.location.href = '/dashboard'
+            }
         } catch (err) {
             console.error("Errore durante il login:", err.response?.data || err.message);
         }
     };
 
     const logout = async () => {
-        await logoutStudent()
+        logoutStudent()
         setStudent(null)
     }
 
     return (
         <AuthContext.Provider value={{student, login, logout, loading}}>
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     )
 }
